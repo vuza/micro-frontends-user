@@ -18,6 +18,5 @@ deploy:
   on:
     branch: master
     repo: vuza/micro-frontends-user
-
 notifications:
   email: false

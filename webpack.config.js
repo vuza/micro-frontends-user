@@ -1,6 +1,5 @@
 var webpack = require('webpack')
 var nodeExternals = require('webpack-node-externals')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var path = require('path')
 var config = require('config')
 var fs = require('fs')
