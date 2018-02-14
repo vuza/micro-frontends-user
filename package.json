@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "start": "cd dist && node index",
-    "build": "webpack",
+    "start": "webpack && cd dist && node index",
     "start:watch": "webpack --watch"
   },
   "author": "vuza <marlon@alagoda.at>",
