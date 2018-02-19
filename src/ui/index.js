@@ -6,8 +6,6 @@ import Login from './login'
 import User from './user'
 const config = require('config')
 
-const port = config.get('port')
-const domain = config.get('staticFilesDomain')
 const staticFilesConnectionString = config.get('staticFilesConnectionString')
 
 const ui = {
