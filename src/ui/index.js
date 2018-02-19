@@ -19,7 +19,7 @@ const ui = {
     // Provide it via specific route
 
     // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<http://${staticFilesConnectionString}/user/bundle.js>; rel="fragment-script"`
+    const js = `<${staticFilesConnectionString}/user/bundle.js>; rel="fragment-script"`
 
     res.set({
       // Link: `${css}, ${js}`,
@@ -40,7 +40,7 @@ const ui = {
     // Provide it via specific route
 
     // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<http://${staticFilesConnectionString}/login/bundle.js>; rel="fragment-script"`
+    const js = `<${staticFilesConnectionString}/login/bundle.js>; rel="fragment-script"`
 
     res.set({
       // Link: `${css}, ${js}`,

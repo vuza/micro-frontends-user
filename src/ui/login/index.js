@@ -1,3 +1,4 @@
+import config from 'config'
 import React from 'react'
 
 export default class App extends React.Component {
@@ -13,7 +14,7 @@ export default class App extends React.Component {
 
     const formData = new FormData(e.target)
 
-    fetch('http://localhost:9090/user/api/login', {
+    fetch(`${config.get('apiConnectionString')}/user/api/login`, {
       method: 'POST',
       body: JSON.stringify({
         username: formData.get('username'),
