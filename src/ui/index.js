@@ -10,7 +10,8 @@ const staticFilesConnectionString = config.get('staticFilesConnectionString')
 
 const ui = {
   _serveUser: (req, res) => {
-    const html = renderToString(<User {...req.user} />)
+    const uiData = {user: req.user, apiConnectionString: config.get('apiConnectionString')}
+    const html = renderToString(<User {...uiData} />)
 
     // const styles = flushToHTML()
     // const $ = cheerio.load(styles)
@@ -27,11 +28,12 @@ const ui = {
       'Content-Type': 'text/html'
     })
 
-    res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(req.user)}</script><span id="userRoot">${html}</span>`)
+    res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(uiData)}</script><span id="userRoot">${html}</span>`)
   },
 
   _serveLogin: (req, res) => {
-    const html = renderToString(<Login/>)
+    const uiData = {apiConnectionString: config.get('apiConnectionString')}
+    const html = renderToString(<Login {...uiData} />)
 
     // const styles = flushToHTML()
     // const $ = cheerio.load(styles)
@@ -48,7 +50,7 @@ const ui = {
       'Content-Type': 'text/html'
     })
 
-    res.end(`<span id="loginRoot">${html}</span>`)
+    res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(uiData)}</script><span id="loginRoot">${html}</span>`)
   },
 
   serveUi: (req, res) => req.user ? ui._serveUser(req, res) : ui._serveLogin(req, res)

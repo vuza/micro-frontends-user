@@ -1,4 +1,3 @@
-import config from 'config'
 import React from 'react'
 
 export default class App extends React.Component {
@@ -7,6 +6,7 @@ export default class App extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {}
+    this.fetchUrl = `http://${props.apiConnectionString}/user/api/login`
   }
 
   handleSubmit (e) {
@@ -14,7 +14,7 @@ export default class App extends React.Component {
 
     const formData = new FormData(e.target)
 
-    fetch(`${config.get('apiConnectionString')}/user/api/login`, {
+    fetch(this.fetchUrl, {
       method: 'POST',
       body: JSON.stringify({
         username: formData.get('username'),

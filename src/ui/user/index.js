@@ -5,11 +5,12 @@ export default class App extends React.Component {
     super(props)
 
     this.handleLogout = this.handleLogout.bind(this)
-    this.state = {user: props}
+    this.state = {user: props.user}
+    this.fetchUrl = `http://${props.apiConnectionString}/user/api/logout`
   }
 
   handleLogout () {
-    fetch('http://localhost:9090/user/api/logout', {
+    fetch(this.fetchUrl, {
       method: 'POST',
       credentials: 'include'
     })

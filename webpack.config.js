@@ -47,7 +47,8 @@ module.exports = [{
     process: false,
     Buffer: false,
     __filename: false,
-    __dirname: false
+    __dirname: false,
+    fs: 'empty'
   },
   externals: nodeExternals(),
   plugins: productionPluginDefine,
@@ -77,6 +78,9 @@ module.exports = [{
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
+  },
+  node: {
+    fs: 'empty'
   }
 }, {
   entry: './src/ui/user/browser.js',
@@ -96,5 +100,8 @@ module.exports = [{
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
+  },
+  node: {
+    fs: 'empty'
   }
 }]

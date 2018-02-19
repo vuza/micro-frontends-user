@@ -18,6 +18,7 @@
     "cookie-parser": "^1.4.3",
     "eslint-plugin-react": "^7.6.1",
     "express": "^4.14.0",
+    "fs": "0.0.1-security",
     "json-loader": "^0.5.4",
     "nodemon-webpack-plugin": "^0.1.6",
     "react": "^16.2.0",
