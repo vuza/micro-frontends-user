@@ -1,4 +1,6 @@
-module.exports = {
+const config = {
   port: 3000,
-  staticFilesDomain: 'user-mf.us-east-1.elasticbeanstalk.com'
+  staticFilesConnectionString: 'user-mf.us-east-1.elasticbeanstalk.com'
 }
+
+module.exports = config
