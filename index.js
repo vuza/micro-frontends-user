@@ -12,9 +12,9 @@ const port = config.get('port')
 server.use(cookieParser())
 
 // Since we are doing a lot of cross origin stuff we need to define what is allowed, otherwise the browsers will reject our async. requests
-server.use(function (req, res, next) {
+server.use((req, res, next) => {
   // Since (at least) Google Chrome does not accept a wildcard * for the Allow-Origin header, if credentials are included in the request, we need to defined the allowed origins explicitly
-  res.header('Access-Control-Allow-Origin', 'http://localhost:9090') // TODO need to change this for AWS?
+  res.header('Access-Control-Allow-Origin', config.get('accessControlHeader'))
   // We send and set cookies
   res.header('Access-Control-Allow-Credentials', 'true')
   // We send JSON and add a Content-Type header to make it parse-able
