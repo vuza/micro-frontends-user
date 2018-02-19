@@ -6,7 +6,7 @@ export default class App extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {}
-    this.fetchUrl = `http://${props.apiConnectionString}/user/api/login`
+    this.fetchUrl = `${props.apiConnectionString}/user/api/login`
   }
 
   handleSubmit (e) {

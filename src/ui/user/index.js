@@ -6,7 +6,7 @@ export default class App extends React.Component {
 
     this.handleLogout = this.handleLogout.bind(this)
     this.state = {user: props.user}
-    this.fetchUrl = `http://${props.apiConnectionString}/user/api/logout`
+    this.fetchUrl = `${props.apiConnectionString}/user/api/logout`
   }
 
   handleLogout () {
