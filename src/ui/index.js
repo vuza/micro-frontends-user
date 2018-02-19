@@ -7,6 +7,7 @@ import User from './user'
 const config = require('config')
 
 const port = config.get('port')
+const domain = config.get('staticFilesDomain')
 
 const ui = {
   _serveUser: (req, res) => {
@@ -19,7 +20,7 @@ const ui = {
     // Provide it via specific route
 
     // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<http://localhost:${port}/user/bundle.js>; rel="fragment-script"`
+    const js = `<http://${domain}:${port}/user/bundle.js>; rel="fragment-script"`
 
     res.set({
       // Link: `${css}, ${js}`,
@@ -40,7 +41,7 @@ const ui = {
     // Provide it via specific route
 
     // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<http://localhost:${port}/login/bundle.js>; rel="fragment-script"`
+    const js = `<http://${domain}:${port}/login/bundle.js>; rel="fragment-script"`
 
     res.set({
       // Link: `${css}, ${js}`,
