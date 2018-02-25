@@ -27,9 +27,19 @@ export default class App extends React.Component {
   }
 
   render () {
-    return [
-      <p key="1">Hi, {this.state.user.name}! Go an <a href="/">buy something</a>!</p>,
-      <p key="2">Or do you want to leave? Then <a href="#" onClick={ this.handleLogout }>logout</a> and leave!</p>
-    ]
+    return <div>
+      <p className="callToAction">Hi, {this.state.user.name}! Go an <a href="/">buy something</a>!</p>,
+      <p>Or do you want to leave? Then <a href="#" onClick={ this.handleLogout }>logout</a> and leave!</p>
+      <style jsx>{`
+        p {
+          text-align: center;
+        }
+
+        p.callToAction {
+          font-size: 2em;
+          margin-bottom: .4em;
+        }
+      `}</style>
+    </div>
   }
 }
