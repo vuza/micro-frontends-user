@@ -41,26 +41,47 @@ export default class App extends React.Component {
   }
 
   render () {
-    const html = []
+    const text = this.state.error ? 'Sorry something went wrong, try "peter" and "123"!' : 'Go on, try something! Be brave!'
 
-    if (this.state.error) {
-      html.push(<p key="1">Sorry something went wrong, try "peter" and "123"!</p>)
-    } else {
-      html.push(<p key="1">Go on, try something! Be brave!</p>)
-    }
+    return <div>
+      <p>{text}</p>
 
-    html.push(<form key="2" onSubmit={ this.handleSubmit }>
-      <label>
-        Username
-        <input type="text" name="username" />
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" />
-      </label>
-      <input type="submit" value="Submit" />
-    </form>)
+      <form onSubmit={ this.handleSubmit }>
+        <label>
+          Username
+          <input type="text" name="username" />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
 
-    return html
+      <style jsx>{`
+        p {
+          font-weight: bold;
+          margin-bottom: .4em;
+        }
+        label {
+          display: block;
+          margin-bottom: .4em;
+          position: relative;
+        }
+        label input[type="text"], label input[type="password"] {
+          position: absolute;
+          left: 90px;
+        }
+        input[type="submit"] {
+          cursor: pointer;
+          border: 1px solid black;
+          text-transform: uppercase;
+          background: #ff6961;
+        }
+        input[type="submit"]:hover {
+          background:white;
+        }
+      `}</style>
+    </div>
   }
 }

@@ -1,59 +1,102 @@
 const React = require('react')
 const { renderToString } = require('react-dom/server')
-// const { flushToHTML } = require('styled-jsx/server')
-// const cheerio = require('cheerio')
+const { flushToHTML } = require('styled-jsx/server')
+const cheerio = require('cheerio')
 import Login from './login'
 import User from './user'
 const config = require('config')
+const AWS = require('aws-sdk')
 
 const staticFilesConnectionString = config.get('staticFilesConnectionString')
 
-const ui = {
-  _serveUser: (req, res) => {
-    const uiData = {user: req.user, apiConnectionString: config.get('apiConnectionString')}
-    const html = renderToString(<User {...uiData} />)
+const awsCredentialsFilePath = config.get('aws.credentialsFilePath')
+const awsS3Bucket = config.get('aws.s3Bucket')
 
-    // const styles = flushToHTML()
-    // const $ = cheerio.load(styles)
-
-    // TODO write it to db
-    // Provide it via specific route
-
-    // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<${staticFilesConnectionString}/user/bundle.js>; rel="fragment-script"`
-
-    res.set({
-      // Link: `${css}, ${js}`,
-      Link: `${js}`,
-      'Content-Type': 'text/html'
-    })
-
-    res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(uiData)}</script><span id="userRoot">${html}</span>`)
-  },
-
-  _serveLogin: (req, res) => {
-    const uiData = {apiConnectionString: config.get('apiConnectionString')}
-    const html = renderToString(<Login {...uiData} />)
-
-    // const styles = flushToHTML()
-    // const $ = cheerio.load(styles)
-
-    // TODO write it to db
-    // Provide it via specific route
-
-    // const css = `<http://localhost:${port}/styles${$('style').attr('id')}.css>; rel="stylesheet"`
-    const js = `<${staticFilesConnectionString}/login/bundle.js>; rel="fragment-script"`
-
-    res.set({
-      // Link: `${css}, ${js}`,
-      Link: `${js}`,
-      'Content-Type': 'text/html'
-    })
-
-    res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(uiData)}</script><span id="loginRoot">${html}</span>`)
-  },
-
-  serveUi: (req, res) => req.user ? ui._serveUser(req, res) : ui._serveLogin(req, res)
+if (awsCredentialsFilePath) {
+  AWS.config.loadFromPath(awsCredentialsFilePath)
 }
+
+const s3 = new AWS.S3()
+
+const ui = {
+  serveUi: (req, res) => {
+    let App
+    let data
+    let root
+    let name
+
+    if (req.user) {
+      App = User
+      data = {user: req.user, apiConnectionString: config.get('apiConnectionString')}
+      root = 'userRoot'
+      name = 'user'
+    } else {
+      App = Login
+      data = {apiConnectionString: config.get('apiConnectionString')}
+      root = 'loginRoot'
+      name = 'login'
+    }
+
+    buildView(App, name, data)
+      .then(view => {
+        res.set({
+          Link: `<${view.css}>; rel="stylesheet", <${view.js}>; rel="fragment-script"`,
+          'Content-Type': 'text/html'
+        })
+
+        res.end(`<script>window.__APP_INITIAL_USER_STATE__ = ${JSON.stringify(data)}</script><span id="${root}">${view.html}</span>`)
+      })
+  }
+}
+
+const buildView = (App, name, data) => {
+  const html = renderToString(<App {...data} />)
+
+  const styles = flushToHTML()
+  const $ = cheerio.load(styles)
+  const cssHash = $('style').attr('id')
+
+  return doesCssExist(cssHash)
+    .then(exists => {
+      if (!exists) {
+        return persistCss(cssHash, $('style').html())
+      }
+    })
+    .then(() => ({
+      js: `${staticFilesConnectionString}/${name}/bundle.js`,
+      css: `http://${awsS3Bucket}.s3-website-us-east-1.amazonaws.com/${cssHash}.css`,
+      html
+    }))
+}
+
+const doesCssExist = name => new Promise((resolve, reject) => {
+  s3.headObject({Bucket: awsS3Bucket, Key: `${name}.css`}, (err, data) => {
+    if (err) {
+      if (err.code === 'NotFound') {
+        return resolve(false)
+      }
+
+      return reject(err)
+    }
+
+    resolve(true)
+  })
+})
+
+const persistCss = (name, content) => new Promise((resolve, reject) => {
+  s3.putObject({
+    Body: content,
+    Bucket: awsS3Bucket,
+    Key: `${name}.css`,
+    ContentType: 'text/css',
+    ACL: 'public-read'
+  }, (err, data) => {
+    if (err) {
+      return reject(err)
+    }
+
+    resolve()
+  })
+})
 
 module.exports = ui
